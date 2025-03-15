@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class LevelsScreen extends StatelessWidget {
-  final List<String> gameLevels = [
-    "📜 Nivel 1: El Despertar",
-    "🕯 Nivel 2: La Biblioteca Encantada",
-    "🔢 Nivel 3: Retos Numéricos",
-    "🎭 Nivel 4: El Teatro de las Sombras",
-    "🧩 Nivel 5: El Gran Enigma",
-    "⚗ Nivel 6: El Laboratorio Perdido",
-    "🗝 Nivel 7: La Cámara Secreta",
-    "👁 Nivel 8: El Guardián del Conocimiento",
-    "🔥 Nivel 9: Prueba Final",
+  final List<Map<String, String>> gameLevels = [
+    {
+      "title": "Nivel 1: Ecos del Lenguaje",
+      "description": "Dentro de un libro antiguo encantado, el jugador debe descubrir palabras ocultas dentro de otras palabras. Este desafío refuerza la comprensión del lenguaje y la habilidad para identificar patrones lingüísticos."
+    },
+    {
+      "title": "Nivel 2: Llamas del Desafío",
+      "description": "Un desafío de reflejos y estrategia en el gimnasio de la academia. Los jugadores deben esquivar y lanzar proyectiles de energía espectral en un duelo contra un rival. Solo aquellos con rapidez y precisión lograrán vencer."
+    },
+    {
+      "title": "Nivel 3: Sombras del Conocimiento",
+      "description": "El jugador debe usar piezas de tangram para formar figuras ocultas en las sombras de la biblioteca. Cada figura representa un concepto clave del conocimiento, poniendo a prueba la capacidad de observación y la lógica del jugador."
+    },
   ];
 
   @override
@@ -18,47 +22,94 @@ class LevelsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Lista de Niveles"),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.black.withOpacity(0.7),
+        elevation: 0,
       ),
-      backgroundColor: Colors.black, // Fondo oscuro
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Niveles del Juego",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          // Fondo con imagen
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/banner.jpg',
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          // Capa de opacidad
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withOpacity(0.6),
+            ),
+          ),
+
+          // Contenido Principal
+          Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20),
+                      _buildLevelsList(),
+                      SizedBox(height: 20),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              "Estos son los niveles que podrás explorar en SoulQuest.",
-              style: TextStyle(fontSize: 16, color: Colors.white70),
-            ),
-            SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                itemCount: gameLevels.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    color: Colors.grey[900],
-                    child: ListTile(
-                      leading: Icon(Icons.videogame_asset, color: Colors.blueAccent),
-                      title: Text(
-                        gameLevels[index],
-                        style: TextStyle(color: Colors.white),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// **Lista de Niveles con Descripción**
+  Widget _buildLevelsList() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: gameLevels.map((level) {
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: Container(
+              padding: EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Color(0xFF6AFFED), width: 2), // Azul Aqua
+                boxShadow: [
+                  BoxShadow(color: Color(0xFF6AFFED).withOpacity(0.5), blurRadius: 10),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.videogame_asset, color: Color(0xFF6AFFED)),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          level["title"]!,
+                          style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    level["description"]!,
+                    style: TextStyle(fontSize: 14, color: Colors.white70),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
+            ).animate().fade(duration: 600.ms).slideY(begin: 0.2),
+          );
+        }).toList(),
       ),
     );
   }

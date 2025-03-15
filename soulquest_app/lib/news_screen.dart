@@ -1,26 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class NewsScreen extends StatelessWidget {
   final List<Map<String, String>> gameNews = [
     {
-      "title": "📢 Nueva actualización 1.2",
-      "date": "10 de marzo de 2025",
-      "description": "Se han añadido nuevos acertijos y mejorado la experiencia de juego en la Biblioteca Encantada."
+      "title": "🛠 Corrección de errores",
+      "description": "Se han solucionado varios bugs que afectaban el rendimiento y la jugabilidad."
     },
     {
-      "title": "⚙️ Mejoras en la jugabilidad",
-      "date": "5 de marzo de 2025",
-      "description": "Ahora los minijuegos tienen pistas opcionales para ayudar a los jugadores en los desafíos más complejos."
+      "title": "👻 Modo terror mejorado",
+      "description": "Se han agregado efectos de sonido y visuales para hacer la experiencia más inmersiva."
     },
     {
-      "title": "🎨 Actualización visual",
-      "date": "28 de febrero de 2025",
-      "description": "Se han mejorado los efectos de iluminación y se ha añadido más detalle a los escenarios oscuros."
-    },
-    {
-      "title": "📜 Nuevo capítulo desbloqueado",
-      "date": "20 de febrero de 2025",
-      "description": "El nivel 'El Guardián del Conocimiento' ya está disponible para todos los jugadores."
+      "title": "🕵️‍♂️ Enemigos en nuevas áreas",
+      "description": "Se han añadido más enemigos en diferentes partes del mapa para aumentar la dificultad."
     },
   ];
 
@@ -29,61 +22,90 @@ class NewsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Noticias y Actualizaciones"),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.black.withOpacity(0.7),
+        elevation: 0,
       ),
-      backgroundColor: Colors.black, // Fondo oscuro
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Últimas Noticias",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          // Fondo con imagen
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/banner.jpg',
+              fit: BoxFit.cover,
+            ),
+          ),
+          // Capa de opacidad
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withOpacity(0.6),
+            ),
+          ),
+          Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20),
+                      _buildNewsList(),
+                      SizedBox(height: 20),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              "Mantente informado sobre los cambios y mejoras en SoulQuest.",
-              style: TextStyle(fontSize: 16, color: Colors.white70),
-            ),
-            SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                itemCount: gameNews.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    color: Colors.grey[900],
-                    child: ListTile(
-                      leading: Icon(Icons.new_releases, color: Colors.redAccent),
-                      title: Text(
-                        gameNews[index]["title"]!,
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            gameNews[index]["date"]!,
-                            style: TextStyle(color: Colors.white54, fontSize: 12),
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            gameNews[index]["description"]!,
-                            style: TextStyle(color: Colors.white70),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// **Lista de Noticias con Tarjetas Animadas**
+  Widget _buildNewsList() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: gameNews.map((news) {
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: Container(
+              padding: EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Color(0xFF6AFFED), width: 2), // Azul Aqua
+                boxShadow: [
+                  BoxShadow(color: Color(0xFF6AFFED).withOpacity(0.5), blurRadius: 10),
+                ],
               ),
-            ),
-          ],
-        ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.article, color: Color(0xFF6AFFED)),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          news["title"]!,
+                          style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    news["description"]!,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, color: Colors.white70),
+                  ),
+                ],
+              ),
+            ).animate().fade(duration: 600.ms).slideY(begin: 0.2),
+          );
+        }).toList(),
       ),
     );
   }
